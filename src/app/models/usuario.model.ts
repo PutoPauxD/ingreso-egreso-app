@@ -4,4 +4,9 @@ export class Usuario {
         public nombre: string,
         public email: string,
     ) {}
+
+    static fromFirebase( {email, nombre, uid} ) {
+        return new Usuario(uid, nombre, email);
+    }
+
 }
