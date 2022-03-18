@@ -37,7 +37,7 @@
                             "budgets": [{
                                     "type": "initial",
                                     "maximumWarning": "500kb",
-                                    "maximumError": "1mb"
+                                    "maximumError": "2mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
@@ -53,7 +53,13 @@
                         },
                         "development": {
                             "buildOptimizer": false,
-                            "optimization": false,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                }
+                            },
                             "vendorChunk": true,
                             "extractLicenses": false,
                             "sourceMap": true,
@@ -92,7 +98,9 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "src/styles.css"
+                            "src/styles.css",
+                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
+
                         ],
                         "scripts": []
                     }
