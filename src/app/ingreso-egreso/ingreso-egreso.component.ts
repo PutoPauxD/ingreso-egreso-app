@@ -7,6 +7,7 @@ import { IngresoEgreso } from '../models/ingreso-egreso.model';
 import { IngresoEgresoService } from '../services/ingreso-egreso.service';
 import { isLoading, stopLoading } from '../shared/ui.actions';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ingreso-egreso',
@@ -21,7 +22,10 @@ export class IngresoEgresoComponent implements OnDestroy {
   cargado: boolean;
   uiSubscription: Subscription;
 
-  constructor(private formBuilder: FormBuilder, private IngresoEgresoService: IngresoEgresoService, private store:Store<AppState>) {
+  constructor(private formBuilder: FormBuilder,
+              private IngresoEgresoService: IngresoEgresoService,
+              private store:Store<AppState>,
+              private router:Router) {
     this.ingresoForm = this.formBuilder.group({
       descripcion: ['', Validators.required],
       monto: ['', Validators.required],
@@ -42,6 +46,7 @@ export class IngresoEgresoComponent implements OnDestroy {
       .then( () => {
         Swal.fire('RegistroCreado', descripcion, 'success'),
         this.store.dispatch(stopLoading());
+        this.ingresoForm.reset();
       })
       .catch( err => {
         Swal.fire('Error', err, 'error'),
