@@ -15,13 +15,17 @@ import { Subscription } from 'rxjs';
   styles: [
   ]
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnDestroy {
 
   loginForm: FormGroup;
   cargando: boolean;
-  uiSubscription: Subscription
+  uiSubscription: Subscription;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private store: Store<AppState>) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private store: Store<AppState>) {
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -29,11 +33,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     })
 
     this.cargando = false;
-   }
-
-  ngOnInit(): void {
     this.uiSubscription = this.store.select('ui').subscribe(ui => this.cargando = ui.isLoading);
-  }
+   }
 
   ngOnDestroy(): void {
     this.uiSubscription.unsubscribe();

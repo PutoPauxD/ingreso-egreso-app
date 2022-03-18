@@ -8,12 +8,19 @@ import { AppState } from '../app.reducer';
 import { Store } from '@ngrx/store';
 import * as authAction from '../auth/auth.actions';
 import { unSetUser } from '../auth/auth.actions';
+import { unSetItems } from '../ingreso-egreso/ingreso-engreso.action';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
   userSubscription: Subscription;
+  private _user: Usuario;
+
+  get user(){
+    return {...this._user}
+  }
 
   constructor(public auth:AngularFireAuth, private router:Router, private firestore:AngularFirestore, private store: Store<AppState>) { }
 
@@ -21,14 +28,17 @@ export class AuthService {
     this.auth.authState.subscribe( fuser => {
       if(fuser) {
         this.userSubscription = this.firestore.doc(`${fuser.uid}/usuario`).valueChanges().subscribe((firestoreUser:any)=>{
-          console.log('Existe fuser')
           const user = Usuario.fromFirebase(firestoreUser);
+          this._user = user;
           this.store.dispatch(authAction.setUser({user}));
         })
       } else {
-        this.userSubscription.unsubscribe();
+        this._user = null;
+        if (this.userSubscription) {
+          this.userSubscription.unsubscribe();
+        }
         this.store.dispatch(unSetUser());
-        console.log('No existe fuser')
+        this.store.dispatch(unSetItems());
       }
     });
   }
